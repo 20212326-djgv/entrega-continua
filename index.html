@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker y DevOps - Práctica Electiva</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2496ed;
+            --primary-dark: #1d7bc4;
+            --secondary: #0d1b2a;
+            --accent: #00d4aa;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --dark: #212529;
+            --gradient: linear-gradient(135deg, #2496ed 0%, #00d4aa 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 5% 10%, rgba(36, 150, 237, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 95% 80%, rgba(0, 212, 170, 0.05) 0%, transparent 20%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            background: var(--gradient);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: bold;
+            margin-top: 0.2rem;
+        }
+
+        .step-content h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--gray);
+        }
+
+        .code-block {
+            background: var(--secondary);
+            color: var(--light);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-block code {
+            display: block;
+            white-space: pre;
+        }
+
+        .highlight {
+            color: var(--accent);
+        }
+
+        .hello-world {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: var(--radius);
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hello-world::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+
+        .hello-world h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .hello-world p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        footer {
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .hello-world h2 {
+                font-size: 2.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .step {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .step-number {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Docker y DevOps</h1>
+            <p class="subtitle">Práctica de la Electiva - Ciclo Completo de DevOps</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h2 class="card-title">Instrucciones de la Práctica</h2>
+            </div>
+            <p>En esta práctica veremos el ciclo completo de DevOps. Realizar lo siguiente:</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Desarrollar una Aplicación Web</h3>
+                        <p>Realizar una app web "Hola Mundo" en tu lenguaje de programación favorito.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Crear un Dockerfile</h3>
+                        <p>Utilizar Docker para crear un Dockerfile y generar una imagen de tu aplicación.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Publicar en Docker Hub</h3>
+                        <p>Subir la imagen de tu aplicación a Docker Hub para compartirla.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <h2 class="card-title">Ejemplo de Dockerfile</h2>
+            </div>
+            <p>A continuación, un ejemplo básico de Dockerfile para una aplicación web simple:</p>
+            
+            <div class="code-block">
+                <code><span class="highlight"># Usar una imagen base oficial de Node.js</span>
+FROM node:14-alpine
+
+<span class="highlight"># Establecer el directorio de trabajo</span>
+WORKDIR /app
+
+<span class="highlight"># Copiar los archivos de la aplicación</span>
+COPY package*.json ./
+RUN npm install
+
+<span class="highlight"># Copiar el resto de los archivos</span>
+COPY . .
+
+<span class="highlight"># Exponer el puerto que usa la aplicación</span>
+EXPOSE 3000
+
+<span class="highlight"># Comando para ejecutar la aplicación</span>
+CMD ["npm", "start"]</code>
+            </div>
+        </div>
+
+        <div class="hello-world">
+            <h2>¡Hola Mundo!</h2>
+            <p>Esta es nuestra aplicación web de ejemplo</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Práctica de Docker y DevOps - Electiva II</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-book"></i> Documentación</a>
+                <a href="#"><i class="fab fa-docker"></i> Docker Hub</a>
+                <a href="#"><i class="fas fa-code"></i> Repositorio</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
